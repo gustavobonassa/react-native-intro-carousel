@@ -6,15 +6,47 @@ An introduction page carousel animated with pagination
 npm install react-native-intro-carousel
 ```
 
+or
+
+```sh
+yarn add react-native-intro-carousel
+```
+
 ## Usage
 
 ```js
-import { multiply } from "react-native-intro-carousel";
+import Carousel from "react-native-intro-carousel";
 
 // ...
 
-const result = await multiply(3, 7);
+<Carousel
+  data={[
+    {
+      title: 'Cool package',
+      description: 'This is a cool package',
+      backgroundColor: '#59b2b7',
+      banner: image,
+      titleStyle: {
+        color: 'white',
+      },
+      descriptionStyle: {
+        color: 'white',
+      },
+    },
+  ]}
+  paginationConfig={{
+    dotSize: 20,
+  }}
+/>
 ```
+
+## Props
+
+| Name             | Type                    | Default        | Description                |
+|------------------|-------------------------|----------------|----------------------------|
+| data             | object                  | None, required | Array of pages in carousel |
+| paginationConfig | {   dotSize?: number, } | None           |                            |
+|                  |                         |                |                            |
 
 ## Contributing
 
