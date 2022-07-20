@@ -24,7 +24,7 @@ const DefaultCarouselItem = ({ data, style }: CarouselItemProps) => {
       </View>
       {!!data?.image && (
         <View>
-          <Image source={data.image} style={styles.banner} />
+          <Image source={data.image} style={[styles.banner, data.imageStyle]} />
         </View>
       )}
       <View>

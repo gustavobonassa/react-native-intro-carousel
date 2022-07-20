@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ImageStyle,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   TextStyle,
@@ -16,6 +17,7 @@ export type CarouselData = {
   description?: string;
   titleStyle?: TextStyle;
   descriptionStyle?: TextStyle;
+  imageStyle?: ImageStyle;
   data?: any;
 };
 
