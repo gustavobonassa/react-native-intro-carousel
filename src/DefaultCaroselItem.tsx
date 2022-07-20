@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, ViewStyle, Text, Image } from 'react-native';
-import {
-  StyleSheet,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import type { CarouselData } from './Carousel';
 
 type CarouselItemProps = {
@@ -10,12 +8,7 @@ type CarouselItemProps = {
   style?: ViewStyle;
 };
 
-const DefaultCarouselItem = ({
-  data,
-  style,
-}: CarouselItemProps) => {
-
-
+const DefaultCarouselItem = ({ data, style }: CarouselItemProps) => {
   return (
     <View
       style={[
@@ -23,20 +16,15 @@ const DefaultCarouselItem = ({
         style,
         {
           backgroundColor: data?.backgroundColor,
-        }
+        },
       ]}
     >
       <View>
-        <Text style={[styles.title, data.titleStyle]}>
-          {data.title}
-        </Text>
+        <Text style={[styles.title, data.titleStyle]}>{data.title}</Text>
       </View>
-      {!!data?.banner && (
+      {!!data?.image && (
         <View>
-          <Image
-            source={data.banner}
-            style={styles.banner}
-          />
+          <Image source={data.image} style={styles.banner} />
         </View>
       )}
       <View>
@@ -54,7 +42,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue'
+    backgroundColor: 'blue',
   },
   title: {
     fontSize: 24,
@@ -68,7 +56,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250,
     marginTop: 10,
-  }
+  },
 });
 
 export default DefaultCarouselItem;

@@ -120,7 +120,9 @@
           "trailingComma": "es5",
           "useTabs": false
         }
-      ]
+      ],
+      "@typescript-eslint/no-unused-vars": "off",
+      "react-native/no-inline-styles": "off"
     }
   },
   "eslintIgnore": [

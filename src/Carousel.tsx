@@ -1,38 +1,42 @@
-import React, {
-  useCallback, useMemo, useRef, useState,
-} from 'react';
-import { LayoutChangeEvent, TextStyle, View } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Animated, Dimensions, FlatList, StyleSheet, Text,
+  LayoutChangeEvent,
+  NativeSyntheticEvent,
+  TextStyle,
+  View,
 } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import DefaultCarouselItem from './DefaultCaroselItem';
 
-const viewabilityConfig = { viewAreaCoveragePercentThreshold: 40 };
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
-const defaultDotSize = 20;
-const defaultSpacing = 12;
-
 export type CarouselData = {
+  key: string;
   title: string;
   backgroundColor?: string;
-  banner?: any;
+  image?: any;
   description?: string;
   titleStyle?: TextStyle;
   descriptionStyle?: TextStyle;
+  data?: any;
 };
 
-type CarouselProps = {
+export type CarouselProps = {
   data: CarouselData[];
   paginationConfig?: {
     dotSize?: number;
     bottomOffset?: number;
-    animation?: 'disabled' | 'enabled';
+    animated?: boolean;
     disabled?: boolean;
+    dotIncreaseSize?: number;
+    color?: string;
+    activeColor?: string;
   };
-  renderItem?: (data: CarouselData) => any;
+  renderItem?: ({ item, index }: { item: CarouselData; index: number }) => any;
 };
+
+const viewabilityConfig = { viewAreaCoveragePercentThreshold: 40 };
+
+const defaultDotSize = 15;
+const defaultSpacing = 12;
 
 const CarouselInfo = ({
   data,
@@ -42,8 +46,11 @@ const CarouselInfo = ({
   const {
     dotSize = defaultDotSize,
     bottomOffset = 50,
-    animation = 'enabled',
+    animated = true,
     disabled = false,
+    dotIncreaseSize = 1.4,
+    color = '#ffffff80',
+    activeColor = '#fff',
   } = paginationConfig || {};
 
   const [currentItem, setCurrentItem] = useState(0);
@@ -53,10 +60,21 @@ const CarouselInfo = ({
   }>({});
   const flatlistRef = useRef(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const scaleAnimation = useRef(new Animated.Value(0)).current;
+  const [isNextToDot, setIsNextToDot] = useState(true);
 
   const itemWidth = layoutSize?.width || 0;
-  const maxPaginationSize = (data.length * (dotSize)) + (data.length * defaultSpacing);
-  const maxSlidersSize = (itemWidth * data.length);
+  const maxPaginationSize =
+    data.length * dotSize + data.length * defaultSpacing;
+  const maxSlidersSize = itemWidth * data.length;
+
+  useEffect(() => {
+    Animated.timing(scaleAnimation, {
+      toValue: isNextToDot ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  }, [isNextToDot, scaleAnimation]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems.length > 0 && viewableItems?.[0]?.index >= 0) {
@@ -80,19 +98,12 @@ const CarouselInfo = ({
           bottom: bottomOffset,
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 'auto',
-          }}
-        >
-          {animation === 'enabled' && (
+        <View style={styles.pagination}>
+          {animated && (
             <Animated.View
               style={{
                 ...styles.item,
-                backgroundColor: 'white',
+                backgroundColor: activeColor,
                 position: 'absolute',
                 left: 0,
                 zIndex: 1,
@@ -106,20 +117,19 @@ const CarouselInfo = ({
                       extrapolate: 'clamp',
                     }),
                   },
-                  // {
-                  //   scale: scrollX.interpolate({
-                  //     inputRange: [0, maxSlidersSize],
-                  //     outputRange: [1, 3],
-                  //     extrapolate: 'clamp',
-                  //   }),
-                  // },
+                  {
+                    scale: scaleAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1, dotIncreaseSize],
+                      extrapolate: 'clamp',
+                    }),
+                  },
                 ],
               }}
             />
           )}
-          {/* <View style={{ ...styles.item, backgroundColor: 'red' }} /> */}
-          {data.map((item, index) => {
-            const isActive = animation === 'disabled' && index === currentItem;
+          {data.map((_, index) => {
+            const isActive = !animated && index === currentItem;
             return (
               <View
                 style={{
@@ -127,7 +137,7 @@ const CarouselInfo = ({
                   width: dotSize,
                   height: dotSize,
                   marginLeft: index === 0 ? 0 : defaultSpacing,
-                  backgroundColor: isActive ? 'white' : '#ffffff80',
+                  backgroundColor: isActive ? activeColor : color,
                 }}
                 key={index}
               />
@@ -138,26 +148,34 @@ const CarouselInfo = ({
     );
   };
 
-  // const normalize = (val, max, min) => { return (val - min) / (max - min); }
+  const handleEvent = ({ nativeEvent }: NativeSyntheticEvent<any>) => {
+    const { x } = nativeEvent?.contentOffset || {};
+
+    const positionItem = x % itemWidth;
+    const nextToDot = positionItem < 40 || positionItem > itemWidth - 40;
+    if (nextToDot !== isNextToDot) {
+      setIsNextToDot(nextToDot);
+    }
+  };
 
   return (
-    <View
-      style={styles.container}
-      onLayout={handleOnLayout}
-    >
-      <AnimatedFlatList
+    <View style={styles.container} onLayout={handleOnLayout}>
+      <Animated.FlatList
         ref={flatlistRef}
         initialScrollIndex={0}
         onScroll={Animated.event(
-          [{
-            nativeEvent: {
-              contentOffset: {
-                x: scrollX,
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  x: scrollX,
+                },
               },
             },
-          }],
+          ],
           {
             useNativeDriver: true,
+            listener: handleEvent,
           }
         )}
         data={data}
@@ -166,21 +184,32 @@ const CarouselInfo = ({
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialNumToRender={data.length}
-        decelerationRate='fast'
+        decelerationRate="fast"
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-        snapToAlignment='start'
+        snapToAlignment="start"
         snapToInterval={itemWidth}
         pagingEnabled
-        renderItem={({ item }) => (
-          <DefaultCarouselItem
-            style={{
-              ...styles.container,
-              width: itemWidth,
-            }}
-            data={item}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) =>
+          renderItem ? (
+            <View
+              style={{
+                ...styles.container,
+                width: itemWidth,
+              }}
+            >
+              {renderItem({ item, index })}
+            </View>
+          ) : (
+            <DefaultCarouselItem
+              style={{
+                ...styles.container,
+                width: itemWidth,
+              }}
+              data={item}
+            />
+          )
+        }
+        keyExtractor={(item) => item.key}
       />
       {!disabled && renderPagination()}
     </View>
@@ -196,7 +225,12 @@ const styles = StyleSheet.create({
   },
   item: {
     borderRadius: 50,
-    backgroundColor: '#ffffff80',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 'auto',
   },
 });
 

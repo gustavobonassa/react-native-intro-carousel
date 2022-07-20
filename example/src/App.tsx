@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-intro-carousel';
-const image =  require('./assets/1.png');
+const image = require('./assets/1.png');
 
 export default function App() {
   return (
@@ -10,10 +10,11 @@ export default function App() {
       <Carousel
         data={[
           {
+            key: '1',
             title: 'Cool package',
             description: 'This is a cool package',
-            backgroundColor: '#59b2b7',
-            banner: image,
+            backgroundColor: '#e879f2',
+            image,
             titleStyle: {
               color: 'white',
             },
@@ -22,10 +23,11 @@ export default function App() {
             },
           },
           {
+            key: '2',
             title: 'Good information here',
             description: 'This is a good information',
-            backgroundColor: '#febe29',
-            banner: image,
+            backgroundColor: '#f0ae35',
+            image,
             titleStyle: {
               color: 'white',
             },
@@ -34,23 +36,30 @@ export default function App() {
             },
           },
           {
+            key: '3',
             title: 'I am tired',
             description: 'I am tired',
-            backgroundColor: '#22bcb5',
-            banner: image,
+            backgroundColor: '#79adf2',
+            image,
             titleStyle: {
               color: 'white',
             },
             descriptionStyle: {
               color: 'white',
             },
-          }
+          },
         ]}
-        paginationConfig={{
-          // dotSize: 10,
-          // animation: 'disabled',
-          // disabled: true,
-        }}
+        // renderItem={({ item }) => <Text>{item.title}</Text>}
+        paginationConfig={
+          {
+            // dotSize: 10,
+            // animated: false,
+            // disabled: true,
+            // dotIncreaseSize: 1,
+            // color: 'blue',
+            // activeColor: 'red'
+          }
+        }
       />
     </View>
   );
