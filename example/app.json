@@ -1,0 +1,23 @@
+{
+  "name": "react-native-intro-carousel-example",
+  "displayName": "IntroCarousel Example",
+  "expo": {
+    "name": "react-native-intro-carousel-example",
+    "slug": "react-native-intro-carousel-example",
+    "description": "Example app for react-native-intro-carousel",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "jsEngine": "hermes",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
