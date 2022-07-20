@@ -36,7 +36,7 @@ const ButtonsScreen = ({
 }) => {
   const { next, prev, done } = buttonsConfig || {};
 
-  const isLastData = dataLength == currentIndex + 1;
+  const isLastData = dataLength === currentIndex + 1;
   const endButton = isLastData ? done : next;
   const endButtonLabel = isLastData ? 'Done' : 'Next';
 
