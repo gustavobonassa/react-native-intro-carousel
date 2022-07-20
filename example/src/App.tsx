@@ -60,6 +60,12 @@ export default function App() {
             // activeColor: 'red'
           }
         }
+        buttonsConfig={
+          {
+            // disabled: true,
+          }
+        }
+        onPressSkip={() => console.log('test')}
       />
     </View>
   );

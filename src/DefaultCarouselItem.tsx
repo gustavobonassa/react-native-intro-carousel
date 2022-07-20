@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ViewStyle, Text, Image } from 'react-native';
 import { StyleSheet } from 'react-native';
-import type { CarouselData } from './Carousel';
+import type { CarouselData } from './types';
 
 type CarouselItemProps = {
   data: CarouselData;
@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
   },
   title: {
     fontSize: 24,

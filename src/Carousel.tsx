@@ -1,39 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ImageStyle,
+  FlatList,
   LayoutChangeEvent,
   NativeSyntheticEvent,
-  TextStyle,
   View,
 } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
-import DefaultCarouselItem from './DefaultCaroselItem';
-
-export type CarouselData = {
-  key: string;
-  title: string;
-  backgroundColor?: string;
-  image?: any;
-  description?: string;
-  titleStyle?: TextStyle;
-  descriptionStyle?: TextStyle;
-  imageStyle?: ImageStyle;
-  data?: any;
-};
-
-export type CarouselProps = {
-  data: CarouselData[];
-  paginationConfig?: {
-    dotSize?: number;
-    bottomOffset?: number;
-    animated?: boolean;
-    disabled?: boolean;
-    dotIncreaseSize?: number;
-    color?: string;
-    activeColor?: string;
-  };
-  renderItem?: ({ item, index }: { item: CarouselData; index: number }) => any;
-};
+import ButtonsScreen, { Button } from './Buttons';
+import DefaultCarouselItem from './DefaultCarouselItem';
+import type { CarouselProps } from './types';
 
 const viewabilityConfig = { viewAreaCoveragePercentThreshold: 40 };
 
@@ -44,6 +19,9 @@ const CarouselInfo = ({
   data,
   paginationConfig,
   renderItem,
+  buttonsConfig,
+  onFinish,
+  onPressSkip,
 }: CarouselProps) => {
   const {
     dotSize = defaultDotSize,
@@ -60,10 +38,12 @@ const CarouselInfo = ({
     width?: number;
     height?: number;
   }>({});
-  const flatlistRef = useRef(null);
+  const flatlistRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const [isNextToDot, setIsNextToDot] = useState(true);
+
+  const disabledButtons = buttonsConfig?.disabled ?? false;
 
   const itemWidth = layoutSize?.width || 0;
   const maxPaginationSize =
@@ -88,6 +68,15 @@ const CarouselInfo = ({
     { onViewableItemsChanged, viewabilityConfig },
   ]);
 
+  const onChangeSlider = (page: number) => {
+    if (!flatlistRef?.current) {
+      return;
+    }
+    flatlistRef.current.scrollToIndex({
+      index: page,
+    });
+  };
+
   const handleOnLayout = ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
     setLayoutSizes(layout);
   };
@@ -95,11 +84,23 @@ const CarouselInfo = ({
   const renderPagination = () => {
     return (
       <View
-        style={{
-          position: 'absolute',
-          bottom: bottomOffset,
-        }}
+        style={[
+          styles.paginationContainer,
+          {
+            bottom: bottomOffset,
+          },
+        ]}
       >
+        {!disabledButtons && (
+          <ButtonsScreen
+            buttonsConfig={buttonsConfig}
+            currentIndex={currentItem}
+            maxPaginationSize={maxPaginationSize}
+            dataLength={data.length}
+            onChangeSlider={(s) => onChangeSlider(s)}
+            onFinish={onFinish}
+          />
+        )}
         <View style={styles.pagination}>
           {animated && (
             <Animated.View
@@ -161,7 +162,10 @@ const CarouselInfo = ({
   };
 
   return (
-    <View style={styles.container} onLayout={handleOnLayout}>
+    <View
+      style={[styles.container, { position: 'relative' }]}
+      onLayout={handleOnLayout}
+    >
       <Animated.FlatList
         ref={flatlistRef}
         initialScrollIndex={0}
@@ -214,6 +218,16 @@ const CarouselInfo = ({
         keyExtractor={(item) => item.key}
       />
       {!disabled && renderPagination()}
+      {onPressSkip && (
+        <View style={styles.skipButton}>
+          <Button
+            title={buttonsConfig?.skip?.label || 'Skip'}
+            onPress={onPressSkip}
+            textStyle={buttonsConfig?.skip?.textStyle}
+            buttonStyle={buttonsConfig?.skip?.buttonStyle}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -233,6 +247,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 'auto',
+  },
+  paginationContainer: {
+    position: 'absolute',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minHeight: 40,
+  },
+  button: {
+    padding: 10,
+  },
+  skipButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 3,
   },
 });
 
