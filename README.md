@@ -22,10 +22,11 @@ import Carousel from "react-native-intro-carousel";
 <Carousel
   data={[
     {
+      key: '1',
       title: 'Cool package',
       description: 'This is a cool package',
       backgroundColor: '#e879f2',
-      banner: image,
+      image: require('./..'),
       titleStyle: {
         color: 'white',
       },
