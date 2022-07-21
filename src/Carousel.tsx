@@ -69,7 +69,7 @@ const CarouselInfo = ({
   ]);
 
   const onChangeSlider = (page: number) => {
-    if (!flatlistRef?.current) {
+    if (!flatlistRef?.current || page < 0 || page >= data.length) {
       return;
     }
     flatlistRef.current.scrollToIndex({
@@ -203,7 +203,7 @@ const CarouselInfo = ({
                 width: itemWidth,
               }}
             >
-              {renderItem({ item, index })}
+              {renderItem({ item, index }, onChangeSlider)}
             </View>
           ) : (
             <DefaultCarouselItem

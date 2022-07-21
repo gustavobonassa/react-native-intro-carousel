@@ -48,6 +48,8 @@ const ButtonsScreen = ({
             <Button
               title={prev?.label || 'Prev'}
               onPress={() => onChangeSlider(currentIndex - 1)}
+              textStyle={prev?.textStyle}
+              buttonStyle={prev?.buttonStyle}
             />
           )}
         </View>

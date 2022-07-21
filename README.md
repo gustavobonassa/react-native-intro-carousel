@@ -45,6 +45,57 @@ import Carousel from "react-native-intro-carousel";
 
 ![Demo](/assets/demo.gif?raw=true "Demo")
 
+## Customizable
+
+You can use your own component
+
+```js
+<Carousel
+  data={[
+    {
+      key: '1',
+      title: 'Cool package',
+      description: 'This is a cool package',
+      image: require('./..'),
+      data: {
+        ... // you can add any data here
+      }
+    },
+  ]}
+  buttonsConfig={{
+    disabled: true,
+  }}
+  renderItem={({ item, index }, goToSlide) => (
+    <View style={styles.content}>
+      <Image
+        source={item.image}
+        style={styles.image}
+      />
+      <Text>{item.title}</Text>
+      <Text>{item.description}</Text>
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={styles.button}
+          onPress={() => goToSlide(index - 1)}
+        >
+          <Text>Previous</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, { marginLeft: 10 }]}
+          onPress={() => goToSlide(index + 1)}
+        >
+          <Text>Next</Text>
+        </Pressable>
+      </View>
+    </View>
+  )}
+/>
+```
+
+will result in:
+
+![Demo2](/assets/demo2.gif?raw=true "Demo2")
+
 ## Props
 
 | Name             | Type     | Default        | Description                                                  |

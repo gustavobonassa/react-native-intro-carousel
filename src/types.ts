@@ -15,7 +15,7 @@ export type CarouselData = {
 export type ButtonType = {
   label?: string;
   textStyle?: TextStyle;
-  buttonStyle: ViewStyle;
+  buttonStyle?: ViewStyle;
 };
 
 export type PaginationType = {
@@ -39,7 +39,16 @@ export type ButtonsConfigType = {
 export type CarouselProps = {
   data: CarouselData[];
   paginationConfig?: PaginationType;
-  renderItem?: ({ item, index }: { item: CarouselData; index: number }) => any;
+  renderItem?: (
+    {
+      item,
+      index,
+    }: {
+      item: CarouselData;
+      index: number;
+    },
+    goToSlide: (slide: number) => void
+  ) => Element;
   buttonsConfig?: ButtonsConfigType;
   onFinish?: () => void;
   onPressSkip?: () => void;
