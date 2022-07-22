@@ -25,7 +25,9 @@ export type PaginationType = {
   disabled?: boolean;
   dotIncreaseSize?: number;
   color?: string;
+  dotSpacing?: number;
   activeColor?: string;
+  activeDotStyle?: ViewStyle;
 };
 
 export type ButtonsConfigType = {

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Easing,
   FlatList,
   LayoutChangeEvent,
   NativeSyntheticEvent,
@@ -31,6 +32,8 @@ const CarouselInfo = ({
     dotIncreaseSize = 1.4,
     color = '#ffffff80',
     activeColor = '#fff',
+    dotSpacing = defaultSpacing,
+    activeDotStyle,
   } = paginationConfig || {};
 
   const [currentItem, setCurrentItem] = useState(0);
@@ -42,19 +45,26 @@ const CarouselInfo = ({
   const scrollX = useRef(new Animated.Value(0)).current;
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const [isNextToDot, setIsNextToDot] = useState(true);
+  const [animationWidth, setAnimationWidth] = useState(new Animated.Value(0));
 
   const disabledButtons = buttonsConfig?.disabled ?? false;
 
   const itemWidth = layoutSize?.width || 0;
   const maxPaginationSize =
-    data.length * dotSize + data.length * defaultSpacing;
+    data.length * dotSize + data.length * dotSpacing;
   const maxSlidersSize = itemWidth * data.length;
 
   useEffect(() => {
-    Animated.timing(scaleAnimation, {
+    // Animated.timing(scaleAnimation, {
+    //   toValue: isNextToDot ? 1 : 0,
+    //   duration: 100,
+    //   useNativeDriver: true,
+    // }).start();
+    Animated.timing(animationWidth, {
       toValue: isNextToDot ? 1 : 0,
-      duration: 100,
-      useNativeDriver: true,
+      easing: Easing.bezier(0, 0, 0.1, 1),
+      duration: 500,
+      useNativeDriver: false,
     }).start();
   }, [isNextToDot, scaleAnimation]);
 
@@ -108,10 +118,16 @@ const CarouselInfo = ({
                 ...styles.item,
                 backgroundColor: activeColor,
                 position: 'absolute',
-                left: 0,
+                left: 0, // - (dotSize / 2),
                 zIndex: 1,
-                width: dotSize,
+                // width: dotSize, // * 2,
+                width: animationWidth.interpolate({
+                  inputRange:[0, 1],
+                  outputRange:[dotSize, dotSize * 3],
+                  extrapolate: "clamp"
+                }),
                 height: dotSize,
+                ...activeDotStyle,
                 transform: [
                   {
                     translateX: scrollX.interpolate({
@@ -139,7 +155,8 @@ const CarouselInfo = ({
                   ...styles.item,
                   width: dotSize,
                   height: dotSize,
-                  marginLeft: index === 0 ? 0 : defaultSpacing,
+                  ...(isActive && activeDotStyle),
+                  marginLeft: index === 0 ? 0 : dotSpacing,
                   backgroundColor: isActive ? activeColor : color,
                 }}
                 key={index}

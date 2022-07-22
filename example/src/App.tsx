@@ -54,9 +54,10 @@ export default function App() {
           // dotSize: 10,
           // animated: false,
           // disabled: true,
-          // dotIncreaseSize: 1,
+          // dotIncreaseSize: 3,
+          dotSpacing: 30,
           color: '#00000050',
-          activeColor: 'black',
+          // activeColor: 'black',
         }}
         buttonsConfig={{
           disabled: true,
@@ -82,27 +83,27 @@ export default function App() {
           },
         }}
         // onPressSkip={() => console.log('test')}
-        renderItem={({ item, index }, goToSlide) => (
-          <View style={styles.content}>
-            <Image source={item.image} style={styles.image} />
-            <Text>{item.title}</Text>
-            <Text>{item.description}</Text>
-            <View style={styles.buttonsContainer}>
-              <Pressable
-                style={styles.button}
-                onPress={() => goToSlide(index - 1)}
-              >
-                <Text>Previous</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, { marginLeft: 10 }]}
-                onPress={() => goToSlide(index + 1)}
-              >
-                <Text>Next</Text>
-              </Pressable>
-            </View>
-          </View>
-        )}
+        // renderItem={({ item, index }, goToSlide) => (
+        //   <View style={styles.content}>
+        //     <Image source={item.image} style={styles.image} />
+        //     <Text>{item.title}</Text>
+        //     <Text>{item.description}</Text>
+        //     <View style={styles.buttonsContainer}>
+        //       <Pressable
+        //         style={styles.button}
+        //         onPress={() => goToSlide(index - 1)}
+        //       >
+        //         <Text>Previous</Text>
+        //       </Pressable>
+        //       <Pressable
+        //         style={[styles.button, { marginLeft: 10 }]}
+        //         onPress={() => goToSlide(index + 1)}
+        //       >
+        //         <Text>Next</Text>
+        //       </Pressable>
+        //     </View>
+        //   </View>
+        // )}
       />
     </View>
   );
