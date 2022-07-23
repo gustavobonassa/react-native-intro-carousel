@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Easing,
   FlatList,
   LayoutChangeEvent,
   NativeSyntheticEvent,
@@ -45,26 +44,18 @@ const CarouselInfo = ({
   const scrollX = useRef(new Animated.Value(0)).current;
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const [isNextToDot, setIsNextToDot] = useState(true);
-  const [animationWidth, setAnimationWidth] = useState(new Animated.Value(0));
 
   const disabledButtons = buttonsConfig?.disabled ?? false;
 
   const itemWidth = layoutSize?.width || 0;
-  const maxPaginationSize =
-    data.length * dotSize + data.length * dotSpacing;
+  const maxPaginationSize = data.length * dotSize + data.length * dotSpacing;
   const maxSlidersSize = itemWidth * data.length;
 
   useEffect(() => {
-    // Animated.timing(scaleAnimation, {
-    //   toValue: isNextToDot ? 1 : 0,
-    //   duration: 100,
-    //   useNativeDriver: true,
-    // }).start();
-    Animated.timing(animationWidth, {
+    Animated.timing(scaleAnimation, {
       toValue: isNextToDot ? 1 : 0,
-      easing: Easing.bezier(0, 0, 0.1, 1),
-      duration: 500,
-      useNativeDriver: false,
+      duration: 100,
+      useNativeDriver: true,
     }).start();
   }, [isNextToDot, scaleAnimation]);
 
@@ -118,14 +109,9 @@ const CarouselInfo = ({
                 ...styles.item,
                 backgroundColor: activeColor,
                 position: 'absolute',
-                left: 0, // - (dotSize / 2),
+                left: 0,
                 zIndex: 1,
-                // width: dotSize, // * 2,
-                width: animationWidth.interpolate({
-                  inputRange:[0, 1],
-                  outputRange:[dotSize, dotSize * 3],
-                  extrapolate: "clamp"
-                }),
+                width: dotSize,
                 height: dotSize,
                 ...activeDotStyle,
                 transform: [

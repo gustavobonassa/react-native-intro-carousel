@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-intro-carousel';
 const image = require('./assets/1.png');
 
@@ -56,32 +56,34 @@ export default function App() {
           // disabled: true,
           // dotIncreaseSize: 3,
           dotSpacing: 30,
-          color: '#00000050',
+          // color: '#00000050',
           // activeColor: 'black',
         }}
-        buttonsConfig={{
-          disabled: true,
-          next: {
-            textStyle: {
-              color: 'green',
-            },
-          },
-          prev: {
-            textStyle: {
-              color: 'green',
-            },
-          },
-          skip: {
-            textStyle: {
-              color: 'green',
-            },
-          },
-          done: {
-            textStyle: {
-              color: 'green',
-            },
-          },
-        }}
+        buttonsConfig={
+          {
+            // disabled: true,
+            // next: {
+            //   textStyle: {
+            //     color: 'green',
+            //   },
+            // },
+            // prev: {
+            //   textStyle: {
+            //     color: 'green',
+            //   },
+            // },
+            // skip: {
+            //   textStyle: {
+            //     color: 'green',
+            //   },
+            // },
+            // done: {
+            //   textStyle: {
+            //     color: 'green',
+            //   },
+            // },
+          }
+        }
         // onPressSkip={() => console.log('test')}
         // renderItem={({ item, index }, goToSlide) => (
         //   <View style={styles.content}>
