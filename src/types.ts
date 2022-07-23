@@ -8,7 +8,9 @@ export type CarouselData = {
   description?: string;
   titleStyle?: TextStyle;
   descriptionStyle?: TextStyle;
+  contentStyle?: ViewStyle;
   imageStyle?: ImageStyle;
+  imagePosition?: 'top' | 'bottom' | 'center';
   data?: any;
 };
 
@@ -16,6 +18,11 @@ export type ButtonType = {
   label?: string;
   textStyle?: TextStyle;
   buttonStyle?: ViewStyle;
+  disabled?: boolean;
+  renderButton?: (
+    currentIndex: number,
+    goToSlide: (index: number) => void
+  ) => JSX.Element;
 };
 
 export type PaginationType = {
@@ -25,7 +32,9 @@ export type PaginationType = {
   disabled?: boolean;
   dotIncreaseSize?: number;
   color?: string;
+  dotSpacing?: number;
   activeColor?: string;
+  activeDotStyle?: ViewStyle;
 };
 
 export type ButtonsConfigType = {

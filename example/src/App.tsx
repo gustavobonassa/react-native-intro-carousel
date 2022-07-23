@@ -1,7 +1,9 @@
 import * as React from 'react';
 
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-intro-carousel';
+const arrowIcon = require('./assets/arrow.png');
+const checkIcon = require('./assets/check.png');
 const image = require('./assets/1.png');
 
 export default function App() {
@@ -25,9 +27,13 @@ export default function App() {
           {
             key: '2',
             title: 'Good information here',
-            description: 'This is a good information',
+            description: 'This is a good information\nOther text here',
             backgroundColor: '#f0ae35',
             image,
+            imagePosition: 'center',
+            // contentStyle: {
+            //   justifyContent: 'space-evenly',
+            // },
             titleStyle: {
               color: 'white',
             },
@@ -41,6 +47,7 @@ export default function App() {
             description: 'I am tired',
             backgroundColor: '#79adf2',
             image,
+            imagePosition: 'bottom',
             titleStyle: {
               color: 'white',
             },
@@ -54,55 +61,63 @@ export default function App() {
           // dotSize: 10,
           // animated: false,
           // disabled: true,
-          // dotIncreaseSize: 1,
-          color: '#00000050',
-          activeColor: 'black',
+          dotIncreaseSize: 1,
+          dotSpacing: 30,
+          // color: '#00000050',
+          // activeColor: 'black',
+          // activeDotStyle: {
+          //   width: 30,
+          //   left: -7.5,
+          // }
         }}
         buttonsConfig={{
-          disabled: true,
           next: {
-            textStyle: {
-              color: 'green',
-            },
+            renderButton: (index, onChangeSlider) => (
+              <View
+                onTouchStart={() => onChangeSlider(index + 1)}
+                style={styles.iconButton}
+              >
+                <Image source={arrowIcon} style={styles.arrow} />
+              </View>
+            ),
           },
           prev: {
-            textStyle: {
-              color: 'green',
-            },
-          },
-          skip: {
-            textStyle: {
-              color: 'green',
-            },
+            disabled: true,
           },
           done: {
-            textStyle: {
-              color: 'green',
-            },
+            renderButton: (index, onChangeSlider) => (
+              <View
+                onTouchStart={() => onChangeSlider(index + 1)}
+                style={styles.iconButton}
+              >
+                <Image source={checkIcon} style={styles.arrow} />
+              </View>
+            ),
           },
         }}
+        // onFinish={() => console.log('finish')}
         // onPressSkip={() => console.log('test')}
-        renderItem={({ item, index }, goToSlide) => (
-          <View style={styles.content}>
-            <Image source={item.image} style={styles.image} />
-            <Text>{item.title}</Text>
-            <Text>{item.description}</Text>
-            <View style={styles.buttonsContainer}>
-              <Pressable
-                style={styles.button}
-                onPress={() => goToSlide(index - 1)}
-              >
-                <Text>Previous</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, { marginLeft: 10 }]}
-                onPress={() => goToSlide(index + 1)}
-              >
-                <Text>Next</Text>
-              </Pressable>
-            </View>
-          </View>
-        )}
+        // renderItem={({ item, index }, goToSlide) => (
+        //   <View style={styles.content}>
+        //     <Image source={item.image} style={styles.image} />
+        //     <Text>{item.title}</Text>
+        //     <Text>{item.description}</Text>
+        //     <View style={styles.buttonsContainer}>
+        //       <Pressable
+        //         style={styles.button}
+        //         onPress={() => goToSlide(index - 1)}
+        //       >
+        //         <Text>Previous</Text>
+        //       </Pressable>
+        //       <Pressable
+        //         style={[styles.button, { marginLeft: 10 }]}
+        //         onPress={() => goToSlide(index + 1)}
+        //       >
+        //         <Text>Next</Text>
+        //       </Pressable>
+        //     </View>
+        //   </View>
+        // )}
       />
     </View>
   );
@@ -132,5 +147,14 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
+  },
+  arrow: {
+    width: 30,
+    height: 30,
+  },
+  iconButton: {
+    padding: 10,
+    borderRadius: 50,
+    backgroundColor: '#00000050',
   },
 });

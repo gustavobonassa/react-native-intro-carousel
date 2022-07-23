@@ -8,16 +8,23 @@ const Button = ({
   title,
   buttonStyle,
   textStyle,
+  disabled,
 }: {
   onPress: () => void;
   title: string;
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
-}) => (
-  <Pressable onPress={() => onPress()} style={[styles.button, buttonStyle]}>
-    <Text style={[styles.buttonText, textStyle]}>{title}</Text>
-  </Pressable>
-);
+  disabled?: boolean;
+}) => {
+  if (disabled) {
+    return null;
+  }
+  return (
+    <Pressable onPress={() => onPress()} style={[styles.button, buttonStyle]}>
+      <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+    </Pressable>
+  );
+};
 
 const ButtonsScreen = ({
   buttonsConfig,
@@ -45,30 +52,41 @@ const ButtonsScreen = ({
       <View style={[styles.buttonContainer]}>
         <View style={styles.buttonContent}>
           {currentIndex !== 0 && (
-            <Button
-              title={prev?.label || 'Prev'}
-              onPress={() => onChangeSlider(currentIndex - 1)}
-              textStyle={prev?.textStyle}
-              buttonStyle={prev?.buttonStyle}
-            />
+            <>
+              {!buttonsConfig?.prev?.renderButton ? (
+                <Button
+                  title={prev?.label || 'Prev'}
+                  onPress={() => onChangeSlider(currentIndex - 1)}
+                  textStyle={prev?.textStyle}
+                  buttonStyle={prev?.buttonStyle}
+                  disabled={prev?.disabled}
+                />
+              ) : (
+                buttonsConfig?.prev?.renderButton(currentIndex, onChangeSlider)
+              )}
+            </>
           )}
         </View>
         <View style={{ width: maxPaginationSize }} />
         <View style={styles.buttonContent}>
-          <Button
-            title={endButton?.label || endButtonLabel}
-            textStyle={endButton?.textStyle}
-            buttonStyle={endButton?.buttonStyle}
-            onPress={() => {
-              if (isLastData) {
-                if (onFinish) {
-                  onFinish();
+          {!endButton?.renderButton ? (
+            <Button
+              title={endButton?.label || endButtonLabel}
+              textStyle={endButton?.textStyle}
+              buttonStyle={endButton?.buttonStyle}
+              onPress={() => {
+                if (isLastData) {
+                  if (onFinish) {
+                    onFinish();
+                  }
+                } else {
+                  onChangeSlider(currentIndex + 1);
                 }
-              } else {
-                onChangeSlider(currentIndex + 1);
-              }
-            }}
-          />
+              }}
+            />
+          ) : (
+            endButton?.renderButton(currentIndex, onChangeSlider)
+          )}
         </View>
       </View>
     </>

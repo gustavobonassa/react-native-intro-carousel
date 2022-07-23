@@ -31,9 +31,11 @@ const CarouselInfo = ({
     dotIncreaseSize = 1.4,
     color = '#ffffff80',
     activeColor = '#fff',
+    dotSpacing = defaultSpacing,
+    activeDotStyle,
   } = paginationConfig || {};
 
-  const [currentItem, setCurrentItem] = useState(0);
+  const [currentIndex, setCurrentItem] = useState(0);
   const [layoutSize, setLayoutSizes] = useState<{
     width?: number;
     height?: number;
@@ -46,8 +48,7 @@ const CarouselInfo = ({
   const disabledButtons = buttonsConfig?.disabled ?? false;
 
   const itemWidth = layoutSize?.width || 0;
-  const maxPaginationSize =
-    data.length * dotSize + data.length * defaultSpacing;
+  const maxPaginationSize = data.length * dotSize + data.length * dotSpacing;
   const maxSlidersSize = itemWidth * data.length;
 
   useEffect(() => {
@@ -94,7 +95,7 @@ const CarouselInfo = ({
         {!disabledButtons && (
           <ButtonsScreen
             buttonsConfig={buttonsConfig}
-            currentIndex={currentItem}
+            currentIndex={currentIndex}
             maxPaginationSize={maxPaginationSize}
             dataLength={data.length}
             onChangeSlider={(s) => onChangeSlider(s)}
@@ -112,6 +113,7 @@ const CarouselInfo = ({
                 zIndex: 1,
                 width: dotSize,
                 height: dotSize,
+                ...activeDotStyle,
                 transform: [
                   {
                     translateX: scrollX.interpolate({
@@ -132,14 +134,15 @@ const CarouselInfo = ({
             />
           )}
           {data.map((_, index) => {
-            const isActive = !animated && index === currentItem;
+            const isActive = !animated && index === currentIndex;
             return (
               <View
                 style={{
                   ...styles.item,
                   width: dotSize,
                   height: dotSize,
-                  marginLeft: index === 0 ? 0 : defaultSpacing,
+                  ...(isActive && activeDotStyle),
+                  marginLeft: index === 0 ? 0 : dotSpacing,
                   backgroundColor: isActive ? activeColor : color,
                 }}
                 key={index}
@@ -220,12 +223,16 @@ const CarouselInfo = ({
       {!disabled && renderPagination()}
       {onPressSkip && (
         <View style={styles.skipButton}>
-          <Button
-            title={buttonsConfig?.skip?.label || 'Skip'}
-            onPress={onPressSkip}
-            textStyle={buttonsConfig?.skip?.textStyle}
-            buttonStyle={buttonsConfig?.skip?.buttonStyle}
-          />
+          {!buttonsConfig?.skip?.renderButton ? (
+            <Button
+              title={buttonsConfig?.skip?.label || 'Skip'}
+              onPress={onPressSkip}
+              textStyle={buttonsConfig?.skip?.textStyle}
+              buttonStyle={buttonsConfig?.skip?.buttonStyle}
+            />
+          ) : (
+            buttonsConfig?.skip?.renderButton(currentIndex, onChangeSlider)
+          )}
         </View>
       )}
     </View>
@@ -260,7 +267,7 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     position: 'absolute',
-    top: 60,
+    top: 40,
     right: 20,
     zIndex: 3,
   },
