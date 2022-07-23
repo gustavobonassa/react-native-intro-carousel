@@ -35,7 +35,7 @@ const CarouselInfo = ({
     activeDotStyle,
   } = paginationConfig || {};
 
-  const [currentItem, setCurrentItem] = useState(0);
+  const [currentIndex, setCurrentItem] = useState(0);
   const [layoutSize, setLayoutSizes] = useState<{
     width?: number;
     height?: number;
@@ -95,7 +95,7 @@ const CarouselInfo = ({
         {!disabledButtons && (
           <ButtonsScreen
             buttonsConfig={buttonsConfig}
-            currentIndex={currentItem}
+            currentIndex={currentIndex}
             maxPaginationSize={maxPaginationSize}
             dataLength={data.length}
             onChangeSlider={(s) => onChangeSlider(s)}
@@ -134,7 +134,7 @@ const CarouselInfo = ({
             />
           )}
           {data.map((_, index) => {
-            const isActive = !animated && index === currentItem;
+            const isActive = !animated && index === currentIndex;
             return (
               <View
                 style={{
@@ -223,12 +223,16 @@ const CarouselInfo = ({
       {!disabled && renderPagination()}
       {onPressSkip && (
         <View style={styles.skipButton}>
-          <Button
-            title={buttonsConfig?.skip?.label || 'Skip'}
-            onPress={onPressSkip}
-            textStyle={buttonsConfig?.skip?.textStyle}
-            buttonStyle={buttonsConfig?.skip?.buttonStyle}
-          />
+          {!buttonsConfig?.skip?.renderButton ? (
+            <Button
+              title={buttonsConfig?.skip?.label || 'Skip'}
+              onPress={onPressSkip}
+              textStyle={buttonsConfig?.skip?.textStyle}
+              buttonStyle={buttonsConfig?.skip?.buttonStyle}
+            />
+          ) : (
+            buttonsConfig?.skip?.renderButton(currentIndex, onChangeSlider)
+          )}
         </View>
       )}
     </View>
@@ -263,7 +267,7 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     position: 'absolute',
-    top: 60,
+    top: 40,
     right: 20,
     zIndex: 3,
   },

@@ -96,6 +96,39 @@ will result in:
 
 ![Demo2](/assets/demo2.gif?raw=true "Demo2")
 
+## Customizable buttons
+
+You can use your own component
+
+```js
+<Carousel
+  data={[...]}
+  buttonsConfig={{
+    next: {
+      renderButton: (index, onChangeSlider) => (
+        <Pressable onPress={() => onChangeSlider(index + 1)}>
+          <Image source={arrowIcon} />
+        </Pressable>
+      )
+    },
+    prev: {
+      disabled: true,
+    },
+    done: {
+      renderButton: (index, onChangeSlider) => (
+        <Pressable onPress={() => {...}}>
+          <Image source={checkIcon} />
+        </Pressable>
+      )
+    },
+  }}
+/>
+```
+
+will result in:
+
+![DemoButtons](/assets/buttons.gif?raw=true "DemoButtons")
+
 ## Props
 
 | Name             | Type     | Default        | Description                                                  |
@@ -109,25 +142,28 @@ will result in:
 
 ### `paginationConfig`
 
-| Name            | Type    | Default   | Description                                                                                 |
-|-----------------|---------|-----------|---------------------------------------------------------------------------------------------|
-| dotSize         | number  | 15        | Size of pagination dots                                                                     |
-| bottomOffset    | number  | 50        | pagination distance from bottom                                                             |
-| animated        | boolean | true      | allows disabling dots animation                                                             |
-| disabled        | boolean | false     | hide the pagination                                                                         |
-| dotIncreaseSize | number  | 1.4       | size the dot will grow when it is on a page (hint: use 1 if you don't want the dot to grow) |
-| color           | string  | #ffffff80 | Default dot color                                                                           |
-| activeColor     | string  | #fff      | Active dot color                                                                            |
+| Name            | Type      | Default   | Description                                                                                 |
+|-----------------|-----------|-----------|---------------------------------------------------------------------------------------------|
+| dotSize         | number    | 15        | Size of pagination dots                                                                     |
+| bottomOffset    | number    | 50        | pagination distance from bottom                                                             |
+| animated        | boolean   | true      | allows disabling dots animation                                                             |
+| disabled        | boolean   | false     | hide the pagination                                                                         |
+| dotIncreaseSize | number    | 1.4       | size the dot will grow when it is on a page (hint: use 1 if you don't want the dot to grow) |
+| color           | string    | #ffffff80 | Default dot color                                                                           |
+| activeColor     | string    | #fff      | Active dot color                                                                            |
+| dotSpacing      | number    | 12        | spacing between pagination dots                                                             |
+| activeDotStyle  | ViewStyle | None      | styles for the dot indicating the current page                                              |
 
 ### `buttonsConfig`
 
-| Name     | Type                                                                     | Default | Description                      |
-|----------|--------------------------------------------------------------------------|---------|----------------------------------|
-| disabled | boolean                                                                  | false   | Hide the buttons                 |
-| next     | {   label?: string;   textStyle?: TextStyle;   buttonStyle: ViewStyle; } | None    | Next button configurations       |
-| prev     | same as the line above                                                   | None    | Previous button configurations   |
-| skip     | same as the line above                                                   | None    | Skip button configurations       |
-| done     | same as the line above                                                   | None    | Last slide button configurations |
+
+| Name     | Type                                                                                                                                                                                                                              | Default | Description                      |
+|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|----------------------------------|
+| disabled | boolean                                                                                                                                                                                                                           | false   | Hide the buttons                 |
+| next     | {<br>label?: string;<br>    textStyle?: TextStyle;<br>    buttonStyle?: ViewStyle;<br>    renderButton?:     (       currentIndex: number,       goToSlide: (index: number)          => void     ) => JSX.Element; // render your own button <br>} | None    | Next button configurations       |
+| prev     | same as the line above                                                                                                                                                                                                            | None    | Previous button configurations   |
+| skip     | same as the line above                                                                                                                                                                                                            | None    | Skip button configurations       |
+| done     | same as the line above                                                                                                                                                                                                            | None    | Last slide button configurations |
 
 ## Contributing
 
