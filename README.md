@@ -129,6 +129,13 @@ will result in:
 
 ![DemoButtons](/assets/buttons.gif?raw=true "DemoButtons")
 
+## Banners
+
+you can also use this lib to create cool banners, [look here](https://github.com/gustavobonassa/react-native-intro-carousel/tree/master/example/src)
+
+![Demo Banner](/assets/cats.gif?raw=true "Demo Banner")
+
+
 ## Props
 
 | Name             | Type     | Default        | Description                                                  |

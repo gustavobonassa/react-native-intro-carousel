@@ -2,7 +2,7 @@ import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export type CarouselData = {
   key: string;
-  title: string;
+  title?: string;
   backgroundColor?: string;
   image?: any;
   description?: string;
