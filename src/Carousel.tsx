@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
+import BottomButtons from './BottomButtons';
 import ButtonsScreen, { Button } from './Buttons';
 import DefaultCarouselItem from './DefaultCarouselItem';
 import type { CarouselProps } from './types';
@@ -46,6 +47,7 @@ const CarouselInfo = ({
   const [isNextToDot, setIsNextToDot] = useState(true);
 
   const disabledButtons = buttonsConfig?.disabled ?? false;
+  const useBottomButtons = buttonsConfig?.useBottomButtons ?? false;
 
   const itemWidth = layoutSize?.width || 0;
   const maxPaginationSize = data.length * dotSize + data.length * dotSpacing;
@@ -86,70 +88,82 @@ const CarouselInfo = ({
     return (
       <View
         style={[
-          styles.paginationContainer,
+          styles.bottomContent,
           {
             bottom: bottomOffset,
           },
         ]}
       >
-        {!disabledButtons && (
-          <ButtonsScreen
-            buttonsConfig={buttonsConfig}
-            currentIndex={currentIndex}
-            maxPaginationSize={maxPaginationSize}
-            dataLength={data.length}
-            onChangeSlider={(s) => onChangeSlider(s)}
-            onFinish={onFinish}
-          />
-        )}
-        <View style={styles.pagination}>
-          {animated && (
-            <Animated.View
-              style={{
-                ...styles.item,
-                backgroundColor: activeColor,
-                position: 'absolute',
-                left: 0,
-                zIndex: 1,
-                width: dotSize,
-                height: dotSize,
-                ...activeDotStyle,
-                transform: [
-                  {
-                    translateX: scrollX.interpolate({
-                      inputRange: [0, maxSlidersSize],
-                      outputRange: [0, maxPaginationSize],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                  {
-                    scale: scaleAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, dotIncreaseSize],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                ],
-              }}
+        <View style={[styles.paginationContainer]}>
+          {!disabledButtons && !useBottomButtons && (
+            <ButtonsScreen
+              buttonsConfig={buttonsConfig}
+              currentIndex={currentIndex}
+              maxPaginationSize={maxPaginationSize}
+              dataLength={data.length}
+              onChangeSlider={(s) => onChangeSlider(s)}
+              onFinish={onFinish}
             />
           )}
-          {data.map((_, index) => {
-            const isActive = !animated && index === currentIndex;
-            return (
-              <View
+          <View style={styles.pagination}>
+            {animated && (
+              <Animated.View
                 style={{
                   ...styles.item,
+                  backgroundColor: activeColor,
+                  position: 'absolute',
+                  left: 0,
+                  zIndex: 1,
                   width: dotSize,
                   height: dotSize,
-                  ...(isActive && activeDotStyle),
-                  marginLeft: index === 0 ? 0 : dotSpacing,
-                  backgroundColor: isActive ? activeColor : color,
+                  ...activeDotStyle,
+                  transform: [
+                    {
+                      translateX: scrollX.interpolate({
+                        inputRange: [0, maxSlidersSize],
+                        outputRange: [0, maxPaginationSize],
+                        extrapolate: 'clamp',
+                      }),
+                    },
+                    {
+                      scale: scaleAnimation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, dotIncreaseSize],
+                        extrapolate: 'clamp',
+                      }),
+                    },
+                  ],
                 }}
-                key={index}
               />
-            );
-          })}
+            )}
+            {data.map((_, index) => {
+              const isActive = !animated && index === currentIndex;
+              return (
+                <View
+                  style={{
+                    ...styles.item,
+                    width: dotSize,
+                    height: dotSize,
+                    ...(isActive && activeDotStyle),
+                    marginLeft: index === 0 ? 0 : dotSpacing,
+                    backgroundColor: isActive ? activeColor : color,
+                  }}
+                  key={index}
+                />
+              );
+            })}
+          </View>
         </View>
+        {useBottomButtons && (
+          <BottomButtons
+            onPressNext={() => onChangeSlider(currentIndex + 1)}
+            onPressSkip={onPressSkip}
+            buttonsConfig={buttonsConfig}
+            onFinish={onFinish}
+            currentIndex={currentIndex}
+            dataLength={data.length}
+          />
+        )}
       </View>
     );
   };
@@ -221,7 +235,7 @@ const CarouselInfo = ({
         keyExtractor={(item) => item.key}
       />
       {!disabled && renderPagination()}
-      {onPressSkip && (
+      {onPressSkip && !useBottomButtons && !buttonsConfig?.skip?.disabled && (
         <View style={styles.skipButton}>
           {!buttonsConfig?.skip?.renderButton ? (
             <Button
@@ -256,11 +270,14 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   paginationContainer: {
-    position: 'absolute',
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     minHeight: 40,
+  },
+  bottomContent: {
+    position: 'absolute',
+    width: '100%',
   },
   button: {
     padding: 10,

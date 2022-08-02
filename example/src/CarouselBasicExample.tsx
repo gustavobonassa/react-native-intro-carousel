@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { Image, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-intro-carousel';
-const arrowIcon = require('./assets/arrow.png');
-const checkIcon = require('./assets/check.png');
+// const arrowIcon = require('./assets/arrow.png');
+// const checkIcon = require('./assets/check.png');
 const image = require('./assets/1.png');
 
 export default function CarouselBasicExample() {
@@ -61,7 +61,7 @@ export default function CarouselBasicExample() {
           // dotSize: 10,
           // animated: false,
           // disabled: true,
-          dotIncreaseSize: 1,
+          // dotIncreaseSize: 1,
           dotSpacing: 30,
           // color: '#00000050',
           // activeColor: 'black',
@@ -71,32 +71,36 @@ export default function CarouselBasicExample() {
           // }
         }}
         buttonsConfig={{
-          next: {
-            renderButton: (index, onChangeSlider) => (
-              <View
-                onTouchStart={() => onChangeSlider(index + 1)}
-                style={styles.iconButton}
-              >
-                <Image source={arrowIcon} style={styles.arrow} />
-              </View>
-            ),
+          // next: {
+          //   renderButton: (index, onChangeSlider) => (
+          //     <View
+          //       onTouchStart={() => onChangeSlider(index + 1)}
+          //       style={styles.iconButton}
+          //     >
+          //       <Image source={arrowIcon} style={styles.arrow} />
+          //     </View>
+          //   ),
+          // },
+          // prev: {
+          //   disabled: true,
+          // },
+          // done: {
+          //   renderButton: (index, onChangeSlider) => (
+          //     <View
+          //       onTouchStart={() => onChangeSlider(index + 1)}
+          //       style={styles.iconButton}
+          //     >
+          //       <Image source={checkIcon} style={styles.arrow} />
+          //     </View>
+          //   ),
+          // },
+          skip: {
+            // disabled: true,
           },
-          prev: {
-            disabled: true,
-          },
-          done: {
-            renderButton: (index, onChangeSlider) => (
-              <View
-                onTouchStart={() => onChangeSlider(index + 1)}
-                style={styles.iconButton}
-              >
-                <Image source={checkIcon} style={styles.arrow} />
-              </View>
-            ),
-          },
+          useBottomButtons: true,
         }}
         // onFinish={() => console.log('finish')}
-        // onPressSkip={() => console.log('test')}
+        onPressSkip={() => console.log('test')}
         // renderItem={({ item, index }, goToSlide) => (
         //   <View style={styles.content}>
         //     <Image source={item.image} style={styles.image} />

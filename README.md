@@ -36,14 +36,21 @@ import Carousel from "react-native-intro-carousel";
     },
   ]}
   paginationConfig={{
+    ...
     dotSize: 20,
+  }}
+  buttonsConfig={{
+    ...
+    // useBottomButtons: true,
   }}
 />
 ```
 
 ## Demo
 
-![Demo](/assets/demo.gif?raw=true "Demo")
+| Default | useBottomButtons |
+|---|---|
+|![Demo](/assets/demo.gif?raw=true "Demo")|![Demo3](/assets/demo3.gif?raw=true "Demo3")|
 
 ## Customizable
 
@@ -131,7 +138,7 @@ will result in:
 
 ## Banners
 
-you can also use this lib to create cool banners, [look here](https://github.com/gustavobonassa/react-native-intro-carousel/tree/master/example/src)
+you can also use this lib to create cool banners, [look the example code here](https://github.com/gustavobonassa/react-native-intro-carousel/tree/master/example/src)
 
 ![Demo Banner](/assets/cats.gif?raw=true "Demo Banner")
 
@@ -164,13 +171,14 @@ you can also use this lib to create cool banners, [look here](https://github.com
 ### `buttonsConfig`
 
 
-| Name     | Type                                                                                                                                                                                                                              | Default | Description                      |
-|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|----------------------------------|
-| disabled | boolean                                                                                                                                                                                                                           | false   | Hide the buttons                 |
-| next     | {<br>label?: string;<br>    textStyle?: TextStyle;<br>    buttonStyle?: ViewStyle;<br>    renderButton?:     (       currentIndex: number,       goToSlide: (index: number)          => void     ) => JSX.Element; // render your own button <br>} | None    | Next button configurations       |
-| prev     | same as the line above                                                                                                                                                                                                            | None    | Previous button configurations   |
-| skip     | same as the line above                                                                                                                                                                                                            | None    | Skip button configurations       |
-| done     | same as the line above                                                                                                                                                                                                            | None    | Last slide button configurations |
+| Name | Type | Default | Description |
+|---|---|---|---|
+| disabled | boolean | false | Hide the buttons |
+| next | {<br>label?: string;<br>    textStyle?: TextStyle;<br>    buttonStyle?: ViewStyle;<br>    renderButton?:     (       currentIndex: number,       goToSlide: (index: number)          => void     ) => JSX.Element; // render your own button <br>} | None | Next button configurations |
+| prev | same as the line above | None | Previous button configurations |
+| skip | same as the line above | None | Skip button configurations |
+| done | same as the line above | None | Last slide button configurations |
+| useBottomButtons | boolean | false | Show buttons below pagination |
 
 ## Contributing
 

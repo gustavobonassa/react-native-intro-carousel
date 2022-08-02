@@ -43,6 +43,7 @@ export type ButtonsConfigType = {
   skip?: ButtonType;
   done?: ButtonType;
   disabled?: boolean;
+  useBottomButtons?: boolean;
 };
 
 export type CarouselProps = {
