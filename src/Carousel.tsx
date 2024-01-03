@@ -4,6 +4,7 @@ import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   View,
+  ViewToken,
 } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
 import BottomButtons from './BottomButtons';
@@ -61,8 +62,11 @@ const CarouselInfo = ({
     }).start();
   }, [isNextToDot, scaleAnimation]);
 
-  const onViewableItemsChanged = useCallback(({ viewableItems }) => {
-    if (viewableItems.length > 0 && viewableItems?.[0]?.index >= 0) {
+  const onViewableItemsChanged = useCallback(({ viewableItems }: {
+      viewableItems: Array<ViewToken>;
+      changed: Array<ViewToken>;
+    }) => {
+    if (viewableItems?.[0]?.index && viewableItems.length > 0 && viewableItems?.[0]?.index >= 0) {
       setCurrentItem(viewableItems[0].index);
     }
   }, []);
