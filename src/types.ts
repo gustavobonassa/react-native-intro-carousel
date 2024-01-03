@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export type CarouselData = {
@@ -58,7 +59,7 @@ export type CarouselProps = {
       index: number;
     },
     goToSlide: (slide: number) => void
-  ) => Element;
+  ) => ReactNode;
   buttonsConfig?: ButtonsConfigType;
   onFinish?: () => void;
   onPressSkip?: () => void;
